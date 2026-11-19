@@ -1,0 +1,6 @@
+spaces
+git+https://github.com/huggingface/diffusers
+torch
+transformers
+accelerate
+sentencepiece

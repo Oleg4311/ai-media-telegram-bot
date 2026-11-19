@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  FREE
+  PREMIUM
+  ADMIN
+}
+
+enum GenerationType {
+  IMAGE
+  IMAGE_EDIT
+  VIDEO
+  ANIMATE
+  LONG_VIDEO
+}
+
+enum GenerationMode {
+  FREE
+  PREMIUM
+  CINEMA
+}
+
+enum GenerationStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELED
+}
+
+enum LedgerType {
+  PURCHASE
+  GENERATION
+  REFUND
+  ADMIN_ADJUSTMENT
+  PREMIUM_GRANT
+}
+
+model User {
+  id                 String       @id @default(cuid())
+  telegramId         BigInt       @unique
+  username           String?
+  firstName          String?
+  role               UserRole     @default(FREE)
+  credits            Int          @default(0)
+  premiumUntil       DateTime?
+  premiumPaidDailyCap Int?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  generations        Generation[]
+  ledger              CreditLedger[]
+}
+
+model Generation {
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           GenerationType
+  mode           GenerationMode
+  status         GenerationStatus @default(QUEUED)
+  prompt         String
+  negativePrompt String?
+  durationSec    Int?
+  aspectRatio    String?
+  provider       String?
+  inputPath      String?
+  outputPath     String?
+  outputUrl      String?
+  costCredits    Int              @default(0)
+  error          String?
+  metadata       Json?
+  createdAt      DateTime         @default(now())
+  startedAt      DateTime?
+  finishedAt     DateTime?
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+model CreditLedger {
+  id         String     @id @default(cuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       LedgerType
+  delta      Int
+  balance    Int
+  note       String?
+  externalId String?    @unique
+  createdAt  DateTime   @default(now())
+
+  @@index([userId, createdAt])
+}

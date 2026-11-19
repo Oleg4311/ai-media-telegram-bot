@@ -1,0 +1,45 @@
+{
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": { "ckpt_name": "{{CHECKPOINT}}" }
+  },
+  "10": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "{{INPUT_IMAGE}}" }
+  },
+  "11": {
+    "class_type": "VAEEncode",
+    "inputs": { "pixels": ["10", 0], "vae": ["4", 2] }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "clip": ["4", 1], "text": "{{PROMPT}}" }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "clip": ["4", 1], "text": "{{NEGATIVE_PROMPT}}" }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "cfg": 6.5,
+      "denoise": 0.55,
+      "latent_image": ["11", 0],
+      "model": ["4", 0],
+      "negative": ["7", 0],
+      "positive": ["6", 0],
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "seed": "{{SEED}}",
+      "steps": 28
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": { "samples": ["3", 0], "vae": ["4", 2] }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": { "filename_prefix": "telegram-ai-edit", "images": ["8", 0] }
+  }
+}
