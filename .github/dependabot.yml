@@ -11,6 +11,10 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Мажорные обновления (Prisma, NestJS, TypeScript...) ломают сборку и делаются вручную, отдельно.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-deps:
         patterns: ["*"]
