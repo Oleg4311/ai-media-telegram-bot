@@ -450,3 +450,11 @@ Telegram result
 - Telegram Stars payments: https://core.telegram.org/bots/payments-stars
 - ComfyUI: https://docs.comfy.org/
 
+
+---
+
+## English
+
+**AI Media Studio Telegram Bot** is a NestJS bot that generates, edits and animates images and video from chat: text → image, photo + text → edit, text → video, photo → animation, and long clips (up to 180 s) split into scenes and stitched with FFmpeg. An "AI Director" turns a plain request into a result type, duration, format and scenes. It has FREE / PREMIUM / CINEMA modes (a free local mode via ComfyUI/FFmpeg or pollinations.ai; paid providers OpenAI, Runway, fal.ai, Modal), Telegram Stars → internal credits, PostgreSQL + Prisma, a Redis + BullMQ queue, generation history, refunds on failure and FREE / PREMIUM / ADMIN roles.
+
+Setup: create a bot with @BotFather, copy `.env.example` to `.env` (`TELEGRAM_BOT_TOKEN`, `ADMIN_TELEGRAM_IDS`, provider keys are optional), then `docker compose up -d`. Never commit `.env`. CI type-checks and builds the project on every pull request. MIT licensed.
